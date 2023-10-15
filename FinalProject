@@ -1,0 +1,80 @@
+#Imports necessary modules
+import tkinter as tk
+from tkinter import messagebox
+
+# List that stores user entries
+enteredItems = []
+
+# Creates window
+root = tk.Tk()
+root.title("Shopping List")
+
+
+
+# Functions that are called upon when the user clicks on a button
+def addItem():#Adds an item to the list
+    item = entry.get()
+    if item:
+        shoppingList.insert(tk.END, item)
+        entry.delete(0, tk.END)
+        enteredItems.append(item)
+    else:
+        messagebox.showwarning("Error", "Please enter an item.")#Input validation, it's a shopping list so any and all entries should be valid, just not an empty textbox
+
+def removeItem():#Removes an item from the list
+    selectedItems = shoppingList.curselection()
+    if selectedItems:
+        for index in selectedItems[::-1]:
+            shoppingList.delete(index)
+    else:
+        messagebox.showwarning("Error", "Please click on an item to remove.")
+
+def clearList():#Removes all items from the list
+    shoppingList.delete(0, tk.END)
+
+def exitProgram():#Terminates program
+    if messagebox.askyesno("Exit", "Would you like to exit?"):
+        root.destroy()
+
+def addSavedItem(savedItem):#Adds items from list history to the list
+   shoppingList.insert(tk.END, savedItem)
+
+
+def updateSavedItemsWindow():#Creates window displaying list history
+    savedItemsWindow = tk.Toplevel(root)
+    savedItemsWindow.title("Recently Added")
+
+    for savedItem in enteredItems:
+        savedItemButton = tk.Button(savedItemsWindow, text=savedItem, command=lambda item=savedItem: addSavedItem(item))
+        savedItemButton.pack()
+
+
+
+
+
+# Creates labels, entry box, and buttons
+label1 = tk.Label(root, text="Enter Item:")
+label1.pack()
+entry = tk.Entry(root)
+entry.pack()
+addButton = tk.Button(root, text="Add Item", command=addItem)
+addButton.pack()
+removeButton = tk.Button(root, text="Remove Item", command=removeItem)
+removeButton.pack()
+clearButton = tk.Button(root, text="Clear List", command=clearList)
+clearButton.pack()
+exitButton = tk.Button(root, text="Exit", command=exitProgram)
+exitButton.pack()
+savedItemsButton = tk.Button(root, text="List History", command=updateSavedItemsWindow)
+savedItemsButton.pack()
+items_label = tk.Label(root, text="Items To Get:")
+items_label.pack()
+
+
+
+
+# Creates a listbox
+shoppingList = tk.Listbox(root)
+shoppingList.pack()
+
+root.mainloop()
